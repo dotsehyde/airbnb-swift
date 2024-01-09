@@ -15,11 +15,12 @@ enum SelectedType {
 
 struct SearchView: View {
     @Binding var isSearchOpen:Bool
-    @State var location = ""
+//    @State var location = ""
     @State var startDate = Date()
     @State var endDate = Date()
     @State var guestCount = 0
     @State var type:SelectedType = .location
+    @EnvironmentObject var exploreViewModel:ExploreViewModel
     var body: some View {
         VStack{
             HStack {
@@ -34,10 +35,11 @@ struct SearchView: View {
                     
                 }
                 Spacer()
-                if !location.isEmpty{
+                if !exploreViewModel.location.isEmpty{
                     Button {
                         withAnimation() {
-                            location = ""
+                            exploreViewModel.location = ""
+                            exploreViewModel.searchListing()
                         }
                     } label: {
                         Text("Clear")
@@ -59,8 +61,16 @@ struct SearchView: View {
                     {
                         Image(systemName: "magnifyingglass")
                             .imageScale(.small)
-                        TextField("Search destinations", text: $location)
+                        TextField("Search destinations", text: $exploreViewModel.location)
                             .font(.subheadline)
+                            .onSubmit {
+                                withAnimation {
+                                    exploreViewModel.searchListing()
+                                    isSearchOpen = false
+                                   
+                                }
+                               
+                            }
                         
                     }
                     .frame(height: 44)
@@ -179,5 +189,7 @@ struct ClosedView: View {
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         SearchView(isSearchOpen: .constant(false))
+            .environmentObject(ExploreViewModel(service: ExploreService()))
+            
     }
 }

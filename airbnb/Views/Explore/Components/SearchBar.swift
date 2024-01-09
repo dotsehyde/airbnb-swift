@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct SearchBar: View {
+    @EnvironmentObject var exploreViewModel: ExploreViewModel
     var body: some View {
         HStack(spacing:8){
            Image(systemName: "magnifyingglass")
                 .imageScale(.large)
             VStack(alignment: .leading, spacing:2){
-                Text("Where to?")
+                Text(exploreViewModel.location.isEmpty ? "Where to?" : exploreViewModel.location)
                     .font(.footnote)
                     .fontWeight(.semibold)
                 Text("Anywhere - Any Week - Any Guest")
@@ -46,5 +47,6 @@ struct SearchBar: View {
 struct SearchBar_Previews: PreviewProvider {
     static var previews: some View {
         SearchBar()
+            .environmentObject(ExploreViewModel(service: ExploreService()))
     }
 }

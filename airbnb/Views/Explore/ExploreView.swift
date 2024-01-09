@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ExploreView: View {
+    @EnvironmentObject var exploreViewModel: ExploreViewModel
     @State private var isSearchOpen = false
     var body: some View {
         NavigationStack{
@@ -22,17 +23,29 @@ struct ExploreView: View {
                             }
                         }
                     LazyVStack(spacing: 0) {
-                        ForEach(0...10, id: \.self){listing in
+                        ForEach(exploreViewModel.listings){listing in
                             NavigationLink {
-                                ListingDetailView()
+                                ListingDetailView(listing: listing)
                             } label: {
-                                ListingItem()
+                                ListingItem(listing: listing)
                             }
                         }
                         
                     }
                 }
             }
+            .overlay(alignment: .bottom, content: {
+                Button{
+                    
+                }label: {
+                    Label("Map", systemImage: "map")
+                        .padding()
+                        .foregroundStyle(.white)
+                        .background(.black)
+                        .clipShape(RoundedRectangle(cornerRadius: 50))
+                }
+                .padding(.bottom)
+            })
            
        
         }
@@ -43,5 +56,6 @@ struct ExploreView: View {
 struct ExploreView_Previews: PreviewProvider {
     static var previews: some View {
         ExploreView()
+            .environmentObject(ExploreViewModel(service: ExploreService()))
     }
 }

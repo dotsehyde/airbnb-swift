@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct airbnbApp: App {
+    @StateObject var exploreViewModel = ExploreViewModel(service: ExploreService())
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(exploreViewModel)
         }
     }
 }
